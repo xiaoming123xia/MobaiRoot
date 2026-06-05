@@ -447,7 +447,6 @@ fun SuperUserPagerMiuix(
                         if (!uiState.isRootAvailable) {
                             Card(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                shape = RoundedCornerShape(12.dp)
                             ) {
                                 Text(
                                     text = stringResource(R.string.superuser_no_root_content),

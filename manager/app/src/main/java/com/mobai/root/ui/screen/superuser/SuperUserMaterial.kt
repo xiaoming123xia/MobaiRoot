@@ -65,7 +65,6 @@ import kotlinx.coroutines.launch
 import com.mobai.root.R
 import com.mobai.root.data.model.AppInfo
 import com.mobai.root.ui.component.AppIconImage
-import com.mobai.root.ui.component.material.Card
 import com.mobai.root.ui.component.material.SearchAppBar
 import com.mobai.root.ui.component.material.SegmentedColumn
 import com.mobai.root.ui.component.material.SegmentedItem
@@ -298,9 +297,11 @@ fun SuperUserPagerMaterial(
         ) {
             if (!uiState.isRootAvailable) {
                 Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Card(
+                    androidx.compose.material3.Surface(
                         modifier = Modifier.padding(vertical = 6.dp),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        color = colorScheme.surfaceContainerLow,
+                        tonalElevation = 1.dp
                     ) {
                         Text(
                             text = stringResource(R.string.superuser_no_root_content),

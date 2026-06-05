@@ -510,7 +510,6 @@ fun ModulePagerMiuix(
                         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp)) {
                             Card(
                                 modifier = Modifier.padding(vertical = 6.dp),
-                                shape = RoundedCornerShape(12.dp)
                             ) {
                                 Text(
                                     text = stringResource(R.string.module_no_root_content),
