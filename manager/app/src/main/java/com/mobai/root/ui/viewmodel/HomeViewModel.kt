@@ -69,8 +69,8 @@ class HomeViewModel : ViewModel() {
                 .getBoolean("show_fingerprint", true),
             latestVersionInfo = LatestVersionInfo(),
             currentManagerVersionCode = managerVersion.versionCode,
-            superuserCount = getSuperuserCount(),
-            moduleCount = getModuleCount(),
+            superuserCount = if (isRootAvailable) getSuperuserCount() else 0,
+            moduleCount = if (isRootAvailable) getModuleCount() else 0,
             systemInfo = SystemInfo(
                 kernelVersion = Os.uname().release,
                 managerVersion = "${managerVersion.versionName} (${managerVersion.versionCode})",
