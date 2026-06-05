@@ -8,6 +8,7 @@ import android.system.Os
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import com.mobai.root.ui.util.rootAvailable
 import com.mobai.root.ui.viewmodel.SuperUserViewModel
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -51,8 +52,13 @@ class KernelSUApplication : Application(), ViewModelStoreOwner {
             setEnableOnBackInvokedCallback(applicationInfo, enable)
         }
 
-        val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
-        superUserViewModel.loadAppList()
+        // Only initialize SuperUserViewModel if root is available
+        val isManager = Natives.isManager
+        val hasRoot = isManager && !Natives.requireNewKernel() && rootAvailable()
+        if (hasRoot) {
+            val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
+            superUserViewModel.loadAppList()
+        }
 
         val webroot = File(dataDir, "webroot")
         if (!webroot.exists()) {
