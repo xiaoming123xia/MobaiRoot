@@ -29,28 +29,45 @@ import com.mobai.root.ui.util.rootAvailable
 
 class HomeViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(buildState())
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    init {
+        refresh()
+    }
 
     fun refresh() {
         viewModelScope.launch {
-            val baseState = withContext(Dispatchers.IO) { buildState() }
-            _uiState.update { baseState }
-            if (baseState.checkUpdateEnabled) {
-                val latestVersionInfo = withContext(Dispatchers.IO) { checkNewVersion() }
-                _uiState.update { it.copy(latestVersionInfo = latestVersionInfo) }
+            try {
+                val baseState = withContext(Dispatchers.IO) { buildState() }
+                _uiState.update { baseState }
+                if (baseState.checkUpdateEnabled) {
+                    val latestVersionInfo = withContext(Dispatchers.IO) { 
+                        runCatching { checkNewVersion() }.getOrElse { LatestVersionInfo() }
+                    }
+                    _uiState.update { it.copy(latestVersionInfo = latestVersionInfo) }
+                }
+            } catch (e: Exception) {
+                // If buildState fails, show a safe state
+                _uiState.update { 
+                    it.copy(
+                        isRootAvailable = false,
+                        isManager = false,
+                        requiresNewKernel = false
+                    )
+                }
             }
         }
     }
 
     private fun buildState(): HomeUiState {
         val kernelVersion = getKernelVersion()
-        val isManager = Natives.isManager
-        val ksuVersion = if (isManager) Natives.version else null
-        val lkmMode = ksuVersion?.let { if (kernelVersion.isGKI()) Natives.isLkmMode else null }
-        val isRootAvailable = rootAvailable()
+        val isManager = runCatching { Natives.isManager }.getOrDefault(false)
+        val ksuVersion = if (isManager) runCatching { Natives.version }.getOrNull() else null
+        val lkmMode = ksuVersion?.let { runCatching { Natives.isLkmMode }.getOrNull() }
+        val isRootAvailable = runCatching { rootAvailable() }.getOrDefault(false)
         val managerVersion = getManagerVersion(ksuApp)
-        val kernelFullVersion = if (isManager) Natives.getFullVersion() else null
+        val kernelFullVersion = if (isManager) runCatching { Natives.getFullVersion() }.getOrNull() else null
 
         return HomeUiState(
             kernelVersion = kernelVersion,
@@ -58,26 +75,26 @@ class HomeViewModel : ViewModel() {
             lkmMode = lkmMode,
             isManager = isManager,
             isManagerPrBuild = BuildConfig.IS_PR_BUILD,
-            isKernelPrBuild = Natives.isPrBuild,
-            requiresNewKernel = isManager && Natives.requireNewKernel(),
+            isKernelPrBuild = runCatching { Natives.isPrBuild }.getOrDefault(false),
+            requiresNewKernel = isManager && runCatching { Natives.requireNewKernel() }.getOrDefault(false),
             isRootAvailable = isRootAvailable,
-            isSafeMode = Natives.isSafeMode,
-            isLateLoadMode = Natives.isLateLoadMode,
+            isSafeMode = runCatching { Natives.isSafeMode }.getOrDefault(false),
+            isLateLoadMode = runCatching { Natives.isLateLoadMode }.getOrDefault(false),
             checkUpdateEnabled = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("check_update", true),
             showFullStatus = ksuApp.getSharedPreferences("settings", Context.MODE_PRIVATE)
                 .getBoolean("show_fingerprint", true),
             latestVersionInfo = LatestVersionInfo(),
             currentManagerVersionCode = managerVersion.versionCode,
-            superuserCount = if (isRootAvailable) getSuperuserCount() else 0,
-            moduleCount = if (isRootAvailable) getModuleCount() else 0,
+            superuserCount = if (isRootAvailable) runCatching { getSuperuserCount() }.getOrDefault(0) else 0,
+            moduleCount = if (isRootAvailable) runCatching { getModuleCount() }.getOrDefault(0) else 0,
             systemInfo = SystemInfo(
                 kernelVersion = Os.uname().release,
                 managerVersion = "${managerVersion.versionName} (${managerVersion.versionCode})",
                 deviceModel = resolveDeviceName(),
                 kernelFullVersion = kernelFullVersion,
                 fingerprint = Build.FINGERPRINT,
-                selinuxStatus = getSELinuxStatusRaw(),
+                selinuxStatus = runCatching { getSELinuxStatusRaw() }.getOrDefault("Unknown"),
                 seccompStatus = runCatching {
                     Os.prctl(21 /* PR_GET_SECCOMP */, 0, 0, 0, 0)
                 }.getOrDefault(-1),

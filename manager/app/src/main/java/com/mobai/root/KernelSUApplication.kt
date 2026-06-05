@@ -53,11 +53,14 @@ class KernelSUApplication : Application(), ViewModelStoreOwner {
         }
 
         // Only initialize SuperUserViewModel if root is available
-        val isManager = Natives.isManager
-        val hasRoot = isManager && !Natives.requireNewKernel() && rootAvailable()
+        val isManager = runCatching { Natives.isManager }.getOrDefault(false)
+        val requireNewKernel = runCatching { Natives.requireNewKernel() }.getOrDefault(false)
+        val hasRoot = isManager && !requireNewKernel && runCatching { rootAvailable() }.getOrDefault(false)
         if (hasRoot) {
-            val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
-            superUserViewModel.loadAppList()
+            runCatching {
+                val superUserViewModel = ViewModelProvider(this)[SuperUserViewModel::class.java]
+                superUserViewModel.loadAppList()
+            }
         }
 
         val webroot = File(dataDir, "webroot")
