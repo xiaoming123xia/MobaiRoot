@@ -458,49 +458,50 @@ fun SuperUserPagerMiuix(
                         }
                         Box(modifier = if (backdrop != null) Modifier.layerBackdrop(backdrop) else Modifier) {
                             LazyColumn(
-                            state = lazyListState,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .scrollEndHaptic()
-                                .overScrollVertical()
-                                .nestedScroll(scrollBehavior.nestedScrollConnection),
-                            contentPadding = PaddingValues(
-                                top = innerPadding.calculateTopPadding() + 6.dp,
-                                start = innerPadding.calculateStartPadding(layoutDirection),
-                                end = innerPadding.calculateEndPadding(layoutDirection)
-                            ),
-                            overscrollEffect = null,
-                        ) {
-                            items(uiState.groupedApps, key = { it.uid }, contentType = { "group" }) { group ->
-                                val expanded = expandedUids.value.contains(group.uid)
-                                Column {
-                                    GroupItem(
-                                        group = group,
-                                        onToggleExpand = {
-                                            if (group.apps.size > 1) {
-                                                expandedUids.value =
-                                                    if (expanded) expandedUids.value - group.uid else expandedUids.value + group.uid
+                                state = lazyListState,
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .scrollEndHaptic()
+                                    .overScrollVertical()
+                                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                                contentPadding = PaddingValues(
+                                    top = innerPadding.calculateTopPadding() + 6.dp,
+                                    start = innerPadding.calculateStartPadding(layoutDirection),
+                                    end = innerPadding.calculateEndPadding(layoutDirection)
+                                ),
+                                overscrollEffect = null,
+                            ) {
+                                items(uiState.groupedApps, key = { it.uid }, contentType = { "group" }) { group ->
+                                    val expanded = expandedUids.value.contains(group.uid)
+                                    Column {
+                                        GroupItem(
+                                            group = group,
+                                            onToggleExpand = {
+                                                if (group.apps.size > 1) {
+                                                    expandedUids.value =
+                                                        if (expanded) expandedUids.value - group.uid else expandedUids.value + group.uid
+                                                }
                                             }
+                                        ) {
+                                            actions.onOpenProfile(group)
                                         }
-                                    ) {
-                                        actions.onOpenProfile(group)
-                                    }
-                                    AnimatedVisibility(
-                                        visible = expanded && group.apps.size > 1,
-                                        enter = expandVertically() + fadeIn(),
-                                        exit = shrinkVertically() + fadeOut()
-                                    ) {
-                                        Column {
-                                            group.apps.forEach { app ->
-                                                SimpleAppItem(app = app)
+                                        AnimatedVisibility(
+                                            visible = expanded && group.apps.size > 1,
+                                            enter = expandVertically() + fadeIn(),
+                                            exit = shrinkVertically() + fadeOut()
+                                        ) {
+                                            Column {
+                                                group.apps.forEach { app ->
+                                                    SimpleAppItem(app = app)
+                                                }
+                                                Spacer(Modifier.height(6.dp))
                                             }
-                                            Spacer(Modifier.height(6.dp))
                                         }
                                     }
                                 }
-                            }
-                            item {
-                                Spacer(Modifier.height(bottomInnerPadding))
+                                item {
+                                    Spacer(Modifier.height(bottomInnerPadding))
+                                }
                             }
                         }
                     }
