@@ -506,7 +506,20 @@ fun ModulePagerMiuix(
                     refreshTexts = refreshTexts,
                     contentPadding = contentPadding,
                 ) {
-                    if (modules.isEmpty()) {
+                    if (!uiState.isRootAvailable) {
+                        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp)) {
+                            Card(
+                                modifier = Modifier.padding(vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.module_no_root_content),
+                                    modifier = Modifier.padding(16.dp),
+                                    color = colorScheme.onSurface
+                                )
+                            }
+                        }
+                    } else if (modules.isEmpty()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()

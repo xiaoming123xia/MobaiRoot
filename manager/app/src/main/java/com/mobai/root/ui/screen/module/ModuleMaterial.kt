@@ -408,6 +408,20 @@ fun ModulePagerMaterial(
                 }
                 return@PullToRefreshBox
             }
+            if (!uiState.isRootAvailable) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        stringResource(R.string.module_no_root_content),
+                        textAlign = TextAlign.Center,
+                    )
+                }
+                return@PullToRefreshBox
+            }
             ModuleList(
                 bottomInnerPadding = bottomInnerPadding,
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

@@ -443,8 +443,21 @@ fun SuperUserPagerMiuix(
                         end = innerPadding.calculateEndPadding(layoutDirection)
                     ),
                 ) {
-                    Box(modifier = if (backdrop != null) Modifier.layerBackdrop(backdrop) else Modifier) {
-                        LazyColumn(
+                    Column {
+                        if (!uiState.isRootAvailable) {
+                            Card(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.superuser_no_root_content),
+                                    modifier = Modifier.padding(16.dp),
+                                    color = colorScheme.onSurface
+                                )
+                            }
+                        }
+                        Box(modifier = if (backdrop != null) Modifier.layerBackdrop(backdrop) else Modifier) {
+                            LazyColumn(
                             state = lazyListState,
                             modifier = Modifier
                                 .fillMaxHeight()

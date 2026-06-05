@@ -55,6 +55,7 @@ data class ModuleUiState(
     val magiskInstalled: Boolean = false,
     val confirmDialogState: ModuleConfirmDialogState? = null,
     val effect: ModuleEffect? = null,
+    val isRootAvailable: Boolean = true,
 ) {
     val installButtonVisible: Boolean
         get() = !(isSafeMode || magiskInstalled)

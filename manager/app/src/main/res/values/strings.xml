@@ -346,6 +346,9 @@
     <string name="tool_version_log">Using the patching tool: %1$s</string>
     <string name="tools">Tools</string>
     <string name="root_required">Requires root privileges</string>
+    <string name="root_not_available">Root privileges not available. Please install KernelSU first.</string>
+    <string name="superuser_no_root_content">Superuser features require root access.</string>
+    <string name="module_no_root_content">Module features require root access.</string>
     <string name="kpm_patch_options">KPM Patch</string>
     <string name="kpm_patch_description">For adding additional KPM features</string>
     <string name="enable_kpm_patch">KPM Patch</string>

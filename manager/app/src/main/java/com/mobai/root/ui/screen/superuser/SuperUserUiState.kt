@@ -30,7 +30,8 @@ data class SuperUserUiState(
     val showSystemApps: Boolean = false,
     val showOnlyPrimaryUserApps: Boolean = false,
     val sortOption: Int = 0,
-    val error: Throwable? = null
+    val error: Throwable? = null,
+    val isRootAvailable: Boolean = true,
 )
 
 @Immutable

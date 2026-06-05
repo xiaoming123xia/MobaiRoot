@@ -8,11 +8,11 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -65,6 +65,7 @@ import kotlinx.coroutines.launch
 import com.mobai.root.R
 import com.mobai.root.data.model.AppInfo
 import com.mobai.root.ui.component.AppIconImage
+import com.mobai.root.ui.component.material.Card
 import com.mobai.root.ui.component.material.SearchAppBar
 import com.mobai.root.ui.component.material.SegmentedColumn
 import com.mobai.root.ui.component.material.SegmentedItem
@@ -295,6 +296,20 @@ fun SuperUserPagerMaterial(
                 )
             },
         ) {
+            if (!uiState.isRootAvailable) {
+                Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Card(
+                        modifier = Modifier.padding(vertical = 6.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.superuser_no_root_content),
+                            modifier = Modifier.padding(16.dp),
+                            color = colorScheme.onSurface
+                        )
+                    }
+                }
+            }
             val expandedSearchUids = remember { mutableStateOf(setOf<Int>()) }
 
             LazyColumn(
