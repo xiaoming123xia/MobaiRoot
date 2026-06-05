@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import top.yukonga.miuix.kmp.blur.Backdrop
-import com.mobai.root.Natives
 import com.mobai.root.R
 import com.mobai.root.ui.LocalMainPagerState
 import com.mobai.root.ui.component.FloatingBottomBar
@@ -31,7 +30,6 @@ import com.mobai.root.ui.component.FloatingBottomBarItem
 import com.mobai.root.ui.theme.LocalEnableFloatingBottomBar
 import com.mobai.root.ui.theme.LocalEnableFloatingBottomBarBlur
 import com.mobai.root.ui.util.BlurredBar
-import com.mobai.root.ui.util.rootAvailable
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationBarItem
@@ -46,10 +44,6 @@ fun BottomBarMiuix(
     backdrop: Backdrop,
     modifier: Modifier,
 ) {
-    val isManager = Natives.isManager
-    val fullFeatured = isManager && !Natives.requireNewKernel() && rootAvailable()
-    if (!fullFeatured) return
-
     val mainState = LocalMainPagerState.current
     val enableFloatingBottomBar = LocalEnableFloatingBottomBar.current
     val enableFloatingBottomBarBlur = LocalEnableFloatingBottomBarBlur.current

@@ -24,20 +24,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.mobai.root.Natives
 import com.mobai.root.R
 import com.mobai.root.ui.LocalMainPagerState
-import com.mobai.root.ui.util.rootAvailable
 
 @Composable
 fun NavigationRailMaterial(
     modifier: Modifier = Modifier,
 ) {
-    val isManager = Natives.isManager
-    val fullFeatured = isManager && !Natives.requireNewKernel() && rootAvailable()
     val mainPagerState = LocalMainPagerState.current
-
-    if (!fullFeatured) return
 
     val items = listOf(
         Triple(R.string.home, Icons.Filled.Home, Icons.Outlined.Home),
