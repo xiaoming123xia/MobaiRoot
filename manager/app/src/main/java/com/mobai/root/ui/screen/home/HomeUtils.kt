@@ -18,13 +18,13 @@ data class ManagerVersion(
 )
 
 data class SystemInfo(
-    val kernelVersion: String,
-    val managerVersion: String,
-    val deviceModel: String,
-    val kernelFullVersion: String?,
-    val fingerprint: String,
-    val selinuxStatus: String,
-    val seccompStatus: Int
+    val kernelVersion: String = "",
+    val managerVersion: String = "",
+    val deviceModel: String = "",
+    val kernelFullVersion: String? = null,
+    val fingerprint: String = "",
+    val selinuxStatus: String = "Unknown",
+    val seccompStatus: Int = -1
 )
 
 

@@ -6,7 +6,7 @@ import com.mobai.root.ui.util.module.LatestVersionInfo
 
 @Immutable
 data class HomeUiState(
-    val kernelVersion: KernelVersion = KernelVersion(0, 0, 0, ""),
+    val kernelVersion: KernelVersion = KernelVersion(0, 0, 0),
     val ksuVersion: Int? = null,
     val lkmMode: Boolean? = null,
     val isManager: Boolean = false,
