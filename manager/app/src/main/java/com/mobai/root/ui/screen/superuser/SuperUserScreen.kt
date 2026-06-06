@@ -29,7 +29,7 @@ fun SuperUserPager(
     var hasActivated by remember { mutableStateOf(false) }
     if (isCurrentPage) hasActivated = true
 
-    val isRootAvailable = Natives.isManager && !Natives.requireNewKernel() && rootAvailable()
+    val isRootAvailable = runCatching { Natives.isManager && !Natives.requireNewKernel() && rootAvailable() }.getOrDefault(false)
 
     if (hasActivated) {
         LaunchedEffect(Unit) {

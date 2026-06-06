@@ -44,7 +44,7 @@ fun ModulePager(
     val scope = rememberCoroutineScope()
     val rawUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val isRootAvailable = Natives.isManager && !Natives.requireNewKernel()
+    val isRootAvailable = runCatching { Natives.isManager && !Natives.requireNewKernel() }.getOrDefault(false)
 
     val webUILauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
