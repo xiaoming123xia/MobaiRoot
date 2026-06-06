@@ -7,8 +7,8 @@ import com.mobai.root.Natives
 fun KsuIsValid(
     content: @Composable () -> Unit
 ) {
-    val isManager = runCatching { Natives.isManager }.getOrDefault(false)
-    val ksuVersion = if (isManager) runCatching { Natives.version }.getOrNull() else null
+    val isManager = Natives.isManager
+    val ksuVersion = if (isManager) Natives.version else null
 
     if (ksuVersion != null) {
         content()

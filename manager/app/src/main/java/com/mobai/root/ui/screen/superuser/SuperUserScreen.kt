@@ -9,12 +9,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mobai.root.Natives
 import com.mobai.root.ui.LocalUiMode
 import com.mobai.root.ui.UiMode
 import com.mobai.root.ui.navigation3.Navigator
 import com.mobai.root.ui.navigation3.Route
-import com.mobai.root.ui.util.rootAvailable
 import com.mobai.root.ui.viewmodel.SuperUserViewModel
 
 @Composable
@@ -28,8 +26,6 @@ fun SuperUserPager(
 
     var hasActivated by remember { mutableStateOf(false) }
     if (isCurrentPage) hasActivated = true
-
-    val isRootAvailable = runCatching { Natives.isManager && !Natives.requireNewKernel() && rootAvailable() }.getOrDefault(false)
 
     if (hasActivated) {
         LaunchedEffect(Unit) {
@@ -65,17 +61,15 @@ fun SuperUserPager(
         onOpenProfile = onOpenProfile,
     )
 
-    val enrichedState = uiState.copy(isRootAvailable = isRootAvailable)
-
     when (LocalUiMode.current) {
         UiMode.Miuix -> SuperUserPagerMiuix(
-            uiState = enrichedState,
+            uiState = uiState,
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,
         )
 
         UiMode.Material -> SuperUserPagerMaterial(
-            uiState = enrichedState,
+            uiState = uiState,
             actions = actions,
             bottomInnerPadding = bottomInnerPadding,
         )

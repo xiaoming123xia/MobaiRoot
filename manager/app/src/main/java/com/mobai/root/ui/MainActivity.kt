@@ -123,10 +123,8 @@ class MainActivity : ComponentActivity() {
         intentStateValue = savedInstanceState?.getInt(KEY_INTENT_STATE, 0) ?: 0
         intentStateFlow.value = intentStateValue
 
-        runCatching {
-            val isManager = Natives.isManager
-            if (isManager && !Natives.requireNewKernel()) install()
-        }
+        val isManager = Natives.isManager
+        if (isManager && !Natives.requireNewKernel()) install()
 
         setContent {
             val viewModel = viewModel<MainActivityViewModel>()
@@ -260,8 +258,8 @@ fun MainScreen(
     val enableFloatingBottomBarBlur = LocalEnableFloatingBottomBarBlur.current
     val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { MainPagerConfig.PAGE_COUNT })
     val mainPagerState = rememberMainPagerState(pagerState)
-    val isManager = runCatching { Natives.isManager }.getOrDefault(false)
-    val isFullFeatured = runCatching { isManager && !Natives.requireNewKernel() && rootAvailable() }.getOrDefault(false)
+    val isManager = Natives.isManager
+    val isFullFeatured = isManager && !Natives.requireNewKernel() && rootAvailable()
     var userScrollEnabled by remember(isFullFeatured) { mutableStateOf(isFullFeatured) }
     val uiMode = LocalUiMode.current
     val surfaceColor = when (uiMode) {

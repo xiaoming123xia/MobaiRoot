@@ -20,7 +20,6 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-import com.mobai.root.Natives
 import com.mobai.root.R
 import com.mobai.root.ui.LocalUiMode
 import com.mobai.root.ui.UiMode
@@ -43,8 +42,6 @@ fun ModulePager(
     val viewModel = viewModel<ModuleViewModel>()
     val scope = rememberCoroutineScope()
     val rawUiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val isRootAvailable = runCatching { Natives.isManager && !Natives.requireNewKernel() }.getOrDefault(false)
 
     val webUILauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -153,11 +150,9 @@ fun ModulePager(
         },
     )
 
-    val enrichedState = rawUiState.copy(isRootAvailable = isRootAvailable)
-
     when (uiMode) {
         UiMode.Miuix -> ModulePagerMiuix(
-            uiState = enrichedState,
+            uiState = rawUiState,
             confirmDialogState = rawUiState.confirmDialogState,
             effect = rawUiState.effect,
             actions = actions,
@@ -165,7 +160,7 @@ fun ModulePager(
         )
 
         UiMode.Material -> ModulePagerMaterial(
-            uiState = enrichedState,
+            uiState = rawUiState,
             confirmDialogState = rawUiState.confirmDialogState,
             effect = rawUiState.effect,
             actions = actions,
